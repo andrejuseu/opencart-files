@@ -1,0 +1,217 @@
+<modification>
+	<id>vQmod - Adds Shipping and Payment Methods to Order Lists</id>
+	<version>0.0.2</version>
+	<vqmver>2.3.6</vqmver>
+	<author>OCLietuva</author>
+	<file name="admin/controller/sale/order.php">
+	<operation>
+            <search position="before" index="1"><![CDATA[
+				if (isset($this->request->get['filter_order_status_id'])) {
+			]]></search>
+            <add><![CDATA[
+				if (isset($this->request->get['filter_shipping_method'])) {
+					$url .= '&filter_shipping_method=' . $this->request->get['filter_shipping_method'];
+				}
+				if (isset($this->request->get['filter_payment_method'])) {
+					$url .= '&filter_payment_method=' . $this->request->get['filter_payment_method'];
+				}
+     			]]></add>
+        </operation>
+        <operation>
+            <search position="before" index="2"><![CDATA[
+				if (isset($this->request->get['filter_order_status_id'])) {
+			]]></search>
+            <add><![CDATA[
+				if (isset($this->request->get['filter_shipping_method'])) {
+					$url .= '&filter_shipping_method=' . $this->request->get['filter_shipping_method'];
+				}
+				if (isset($this->request->get['filter_payment_method'])) {
+					$url .= '&filter_payment_method=' . $this->request->get['filter_payment_method'];
+				}
+     			]]></add>
+        </operation>
+        <operation>
+            <search position="before" index="3"><![CDATA[
+				if (isset($this->request->get['filter_order_status_id'])) {
+			]]></search>
+            <add><![CDATA[
+				if (isset($this->request->get['filter_shipping_method'])) {
+					$url .= '&filter_shipping_method=' . $this->request->get['filter_shipping_method'];
+				}
+				if (isset($this->request->get['filter_payment_method'])) {
+					$url .= '&filter_payment_method=' . $this->request->get['filter_payment_method'];
+				}
+     			]]></add>
+        </operation>
+  		<operation>
+	    	<search position="before" index="4"><![CDATA[
+				if (isset($this->request->get['filter_order_status_id'])) {
+			]]></search>
+			<add><![CDATA[
+				if (isset($this->request->get['filter_shipping_method'])) {
+					$filter_shipping_method = $this->request->get['filter_shipping_method'];
+				} else {
+					$filter_shipping_method = NULL;
+				}
+				if (isset($this->request->get['filter_payment_method'])) {
+					$filter_payment_method = $this->request->get['filter_payment_method'];
+				} else {
+					$filter_payment_method = NULL;
+				}
+			]]></add>
+        </operation>
+		<operation>
+            <search position="before" index="5"><![CDATA[
+				if (isset($this->request->get['filter_order_status_id'])) {
+			]]></search>
+            <add><![CDATA[
+				if (isset($this->request->get['filter_shipping_method'])) {
+					$url .= '&filter_shipping_method=' . $this->request->get['filter_shipping_method'];
+				}
+				if (isset($this->request->get['filter_payment_method'])) {
+					$url .= '&filter_payment_method=' . $this->request->get['filter_payment_method'];
+				} 
+     		]]></add>
+        </operation> 
+		<operation>
+            <search position="after" index="1"><![CDATA[
+		  		'total'         => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']),
+			]]></search>
+            <add><![CDATA[
+				'shipping_method'     => $result['shipping_method'],
+				'payment_method'     => $result['payment_method'],
+     		]]></add>
+        </operation>
+        <operation>
+            <search position="before"><![CDATA[
+				'filter_order_status_id' => $filter_order_status_id,
+			]]></search>
+            <add><![CDATA[
+				'filter_shipping_method' => $filter_shipping_method,
+				'filter_payment_method' => $filter_payment_method,
+     		]]></add>
+        </operation>
+        <operation>
+            <search position="before" index="1"><![CDATA[
+				$this->data['column_status'] = $this->language->get('column_status');
+			]]></search>
+            <add><![CDATA[
+				$this->data['column_ship_method'] = $this->language->get('column_ship_method');
+				$this->data['column_pay_method'] = $this->language->get('column_pay_method'); 
+     		]]></add>
+        </operation>
+        <operation>
+            <search position="after"><![CDATA[
+	   			$this->data['sort_status'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
+			]]></search>
+            <add><![CDATA[
+	   			$this->data['sort_shipping_method'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.shipping_method' . $url, 'SSL');
+	   			$this->data['sort_payment_method'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.payment_method' . $url, 'SSL'); 
+     		]]></add>
+        </operation>
+        <operation>
+            <search position="after"><![CDATA[
+				$this->data['filter_order_status_id'] = $filter_order_status_id;
+			]]></search>
+            <add><![CDATA[
+				$this->data['filter_shipping_method'] = $filter_shipping_method;
+				$this->data['filter_payment_method'] = $filter_payment_method; 
+     		]]></add>
+        </operation>
+	</file>
+	<file name="admin/model/sale/order.php">
+        <operation>
+            <search position="replace"><![CDATA[
+				$sql = "SELECT o.order_id, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status, o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified FROM `" . DB_PREFIX . "order` o";
+			]]></search>
+            <add><![CDATA[
+				$sql = "SELECT o.order_id, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status, o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified, o.shipping_method, o.payment_method FROM `" . DB_PREFIX . "order` o";
+     		]]></add>
+        </operation>
+        <operation>
+            <search position="before"><![CDATA[
+				'status',
+			]]></search>
+            <add><![CDATA[
+				'shipping_method',
+				'payment_method',
+     		]]></add>
+        </operation>
+        <operation>
+            <search position="before"><![CDATA[
+				if (!empty($data['filter_date_added'])) {
+			]]></search>
+            <add><![CDATA[
+				if (!empty($data['filter_shipping_method'])) {
+					$sql .= " AND shipping_method LIKE '%" . $this->db->escape($data['filter_shipping_method']) . "%'";
+				}
+				if (!empty($data['filter_payment_method'])) {
+					$sql .= " AND payment_method LIKE '%" . $this->db->escape($data['filter_payment_method']) . "%'";
+				} 
+     		]]></add>
+        </operation>
+	</file>
+	<file name="admin/language/english/sale/order.php">
+        <operation>
+            <search position="after"><![CDATA[
+				$_['column_action']                           = 'Action';
+			]]></search>
+            <add><![CDATA[
+				$_['column_ship_method']    = 'Shipping Method';
+				$_['column_pay_method']    = 'Payment Method';
+     		]]></add>
+        </operation>
+	</file>
+	<file name="admin/view/template/sale/order_list.tpl">
+        <operation>
+            <search position="before"><![CDATA[
+	     		<td class="right"><?php if ($sort == 'o.total') { ?>
+			]]></search>
+            <add><![CDATA[
+	   			<td class="left"><?php if ($sort == 'shipping_method') { ?>
+              		<a href="<?php echo $sort_shipping_method; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_ship_method; ?></a>
+              	<?php } else { ?>
+              		<a href="<?php echo $sort_shipping_method; ?>"><?php echo $column_ship_method; ?></a>
+              	<?php } ?></td>
+	   			<td class="left"><?php if ($sort == 'payment_method') { ?>
+              		<a href="<?php echo $sort_payment_method; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_pay_method; ?></a>
+              	<?php } else { ?>
+              		<a href="<?php echo $sort_payment_method; ?>"><?php echo $column_pay_method; ?></a>
+              	<?php } ?></td>			  
+     		]]></add>
+        </operation>
+        <operation>
+            <search position="before"><![CDATA[
+				<td align="right"><input type="text" name="filter_total" value="<?php echo $filter_total; ?>" size="4" style="text-align: right;" /></td>
+			]]></search>
+            <add><![CDATA[
+	       		<td><input type="text" name="filter_shipping_method" value="<?php echo $filter_shipping_method; ?>" size="15" /></td>
+		   		<td><input type="text" name="filter_payment_method" value="<?php echo $filter_payment_method; ?>" size="20" /></td>
+     		]]></add>
+        </operation>	
+        <operation>
+            <search position="before"><![CDATA[
+	     		<td class="right"><?php echo $order['total']; ?></td>
+			]]></search>
+            <add><![CDATA[
+   	     		<td class="left"><?php echo $order['shipping_method']; ?></td>
+		 		<td class="left"><?php echo $order['payment_method']; ?></td>
+     		]]></add>
+        </operation>
+        <operation>
+            <search position="before"><![CDATA[
+				var filter_order_status_id = $('select[name=\'filter_order_status_id\']').attr('value');
+			]]></search>
+            <add><![CDATA[
+				var filter_shipping_method = $('input[name=\'filter_shipping_method\']').attr('value');
+   	     		if (filter_shipping_method) {
+					url += '&filter_shipping_method=' + encodeURIComponent(filter_shipping_method);
+				}
+				var filter_payment_method = $('input[name=\'filter_payment_method\']').attr('value');
+				if (filter_payment_method) {
+					url += '&filter_payment_method=' + encodeURIComponent(filter_payment_method);
+				}
+     		]]></add>
+        </operation>
+	</file>
+</modification>
