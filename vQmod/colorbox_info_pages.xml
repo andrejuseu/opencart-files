@@ -1,0 +1,27 @@
+<modification>
+  <id>ColorBox in information page</id>
+	<version>0.1</version>
+	<vqmver>2.3.5</vqmver>
+    <author>Andrejus</author>
+	<email>as@andrejus.eu</email>
+	<website>https://github.com/andrejuseu/opencart-failai</website>
+	
+	<file name="catalog/view/theme/*/template/information/information.tpl">
+		<operation error="skip">
+			<search position="before"><![CDATA[
+			<?php echo $footer; ?>
+			]]></search>
+			<add><![CDATA[
+				<script type="text/javascript"><!--
+					$(document).ready(function() {
+  					$('.colorbox').colorbox({
+				overlayClose: true,
+				opacity: 0.5,
+				rel: "colorbox"
+				});
+				});
+				//--></script>
+			]]></add>
+		</operation>
+	</file>
+</modification>
