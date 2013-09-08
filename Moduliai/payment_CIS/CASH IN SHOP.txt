@@ -1,0 +1,5 @@
+Apmokëjimas parduotuvëje
+
+Apmokëjimo modulis, paremtas "Cash on delivery" moduliu
+
+Autorius - Andrejus
